@@ -1,0 +1,75 @@
+import java.util.ArrayList;
+
+public class BChain {
+
+	public static ArrayList<Block> block = new ArrayList<Block>();
+
+	public static void main(String[] args) {
+		Block b = new Block("this is the first block", "0");
+		block.add(b);
+		b.printBlock();
+		Block c = new Block("this is the second block", block.get(block.size() - 1).hash);
+		block.add(c);
+		c.printBlock();
+		Block d = new Block("this is the third block", block.get(block.size() - 1).hash);
+		block.add(d);
+		d.printBlock();
+	}
+}
+
+package General;
+
+import java.io.UnsupportedEncodingException;
+import java.security.*;
+
+public class applyHash {
+
+	public String applyHashingAlgorithm(String input) {
+
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] hash = md.digest(input.getBytes("UTF-8"));
+			String hex = javax.xml.bind.DatatypeConverter.printHexBinary(hash);
+			return hex;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+}
+
+package General;
+
+public class Block {
+
+	public String hash;
+	public String previousHash;
+	private String data;
+
+	// Constructor for the block
+	public Block(String data, String previousHash) {
+		this.data = data;
+		this.previousHash = previousHash;
+		this.hash = calculateHash();
+	}
+	// printBlock function to print the data and the previous hash on the console.
+	public void printBlock() {
+		System.out.println("Data: " + this.data);
+		System.out.println("Previous Hash: " + this.previousHash);
+		System.out.println("Hash: " + this.hash);
+	}
+
+	// calculateHash
+	public String calculateHash() {
+		applyHash ah = new applyHash();
+		String aha = this.data + this.previousHash;
+		String resultHash = ah.applyHashingAlgorithm(aha);
+		return resultHash;
+	}
+
+}
